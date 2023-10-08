@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useRef } from "react";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [todos, setTodos] = useState({
+		title: null,
+		isCompleted: false,
+	});
+
+	const todo = useRef(null);
+
+	function onFormSubmit(e) {
+		e.preventDefault();
+	}
+	return (
+		<div>
+			<h1>Todos</h1>
+			<InputField onFormSubmit={onFormSubmit} todo={todo} />
+		</div>
+	);
+}
+
+function InputField({ onFormSubmit, todo }) {
+	return (
+		<form onSubmit={onFormSubmit}>
+			<input
+				type="text"
+				name="task"
+				placeholder="What task needs to be completed?"
+				ref={todo}
+			/>
+		</form>
+	);
 }
 
 export default App;
