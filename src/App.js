@@ -1,35 +1,57 @@
 import React, { useState, useRef } from "react";
 
-function App() {
-	const [todos, setTodos] = useState({
-		title: null,
-		isCompleted: false,
-	});
+const App = () => {
+	const todoRef = useRef(null);
+	const [todos, setTodos] = useState([]);
 
-	const todo = useRef(null);
-
-	function onFormSubmit(e) {
+	const onFormSubmit = (e) => {
 		e.preventDefault();
-	}
+		const todo = todoRef.current.value;
+		if (todo.trim().length > 0) {
+			setTodos((prevTodo) => [
+				...prevTodo,
+				{ title: todo, isCompleted: false },
+			]);
+			todoRef.current.value = null;
+		}
+	};
 	return (
 		<div>
 			<h1>Todos</h1>
-			<InputField onFormSubmit={onFormSubmit} todo={todo} />
+			<InputField onFormSubmit={onFormSubmit} todoRef={todoRef} />
+			<TodoList todos={todos} />
 		</div>
 	);
-}
+};
 
-function InputField({ onFormSubmit, todo }) {
+const InputField = ({ onFormSubmit, todoRef }) => {
 	return (
 		<form onSubmit={onFormSubmit}>
 			<input
 				type="text"
 				name="task"
 				placeholder="What task needs to be completed?"
-				ref={todo}
+				ref={todoRef}
 			/>
 		</form>
 	);
-}
+};
+
+const TodoList = ({ todos }) => {
+	return (
+		<ol>
+			{todos.map((todo) => {
+				return (
+					<li>
+						{todo.title} <br />
+						<strong>Status:</strong>
+						{todo.isCompleted ? "Completed" : "Pending"}
+						<hr />
+					</li>
+				);
+			})}
+		</ol>
+	);
+};
 
 export default App;
