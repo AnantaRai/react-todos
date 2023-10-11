@@ -1,11 +1,12 @@
-import React, { useState, useRef } from "react";
+import React from "react";
 
 const App = () => {
-	const todoRef = useRef(null);
-	const [todos, setTodos] = useState([]);
+	const todoRef = React.useRef(null);
+	const [todos, setTodos] = React.useState([]);
 
 	const onFormSubmit = (e) => {
 		e.preventDefault();
+
 		const todo = todoRef.current.value;
 		if (todo.trim().length > 0) {
 			setTodos((prevTodo) => [
@@ -18,31 +19,32 @@ const App = () => {
 	return (
 		<div>
 			<h1>Todos</h1>
-			<InputField onFormSubmit={onFormSubmit} todoRef={todoRef} />
+			<InputField onFormSubmit={onFormSubmit} ref={todoRef} />
 			<TodoList todos={todos} />
 		</div>
 	);
 };
 
-const InputField = ({ onFormSubmit, todoRef }) => {
+const InputField = React.forwardRef((props, ref) => {
+	const { onFormSubmit } = props;
 	return (
 		<form onSubmit={onFormSubmit}>
 			<input
 				type="text"
 				name="task"
 				placeholder="What task needs to be completed?"
-				ref={todoRef}
+				ref={ref}
 			/>
 		</form>
 	);
-};
+});
 
 const TodoList = ({ todos }) => {
 	return (
 		<ol>
-			{todos.map((todo) => {
+			{todos.map((todo, idx) => {
 				return (
-					<li>
+					<li key={`${todo.title}-${idx}`}>
 						{todo.title} <br />
 						<strong>Status:</strong>
 						{todo.isCompleted ? "Completed" : "Pending"}
