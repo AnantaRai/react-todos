@@ -1,9 +1,13 @@
 import React from "react";
 import "./index.css";
+import Todos from "./todos.json";
+import { config } from "./config";
 
 const App = () => {
 	const todoRef = React.useRef(null);
-	const [todos, setTodos] = React.useState([]);
+	const [todos, setTodos] = React.useState(
+		config.useJsonFileForTodos ? Todos.todoList : []
+	);
 
 	const onFormSubmit = (e) => {
 		e.preventDefault();
@@ -17,13 +21,23 @@ const App = () => {
 			todoRef.current.value = null;
 		}
 	};
+
+	const handleCheckboxToggle = (todoIdx) => {
+		if (todos[todoIdx] !== "undefined") {
+			setTodos(
+				todos.map((todo, idx) =>
+					idx === todoIdx ? { ...todo, isCompleted: !todo.isCompleted } : todo
+				)
+			);
+		}
+	};
 	return (
 		<div className="w-3/4 mx-auto">
 			<h1 className="text-slate-900 font-extrabold text-3xl sm:text-5xl lg:text-6xl tracking-tight text-center dark:text-white mb-8">
 				Todos
 			</h1>
 			<InputField onFormSubmit={onFormSubmit} ref={todoRef} />
-			<TodoList todos={todos} />
+			<TodoList todos={todos} handleCheckboxToggle={handleCheckboxToggle} />
 		</div>
 	);
 };
@@ -43,24 +57,27 @@ const InputField = React.forwardRef((props, ref) => {
 	);
 });
 
-const TodoList = ({ todos }) => {
+const TodoList = ({ todos, handleCheckboxToggle }) => {
 	return (
 		<ol className="w-1/2 mx-auto mt-8">
-			{todos.map((todo, idx) => {
+			{todos.map((todo, todoIdx) => {
 				return (
 					<li
-						key={`${todo.title}-${idx}`}
+						key={`${todo.title}-${todoIdx}`}
 						className="h-16 border-b border-gray-200 dark:border-gray-800 p-8"
 					>
 						<input
-							id={`${todo.title}-${idx}`}
+							id={`${todo.title}-${todoIdx}`}
 							type="checkbox"
 							defaultValue=""
 							className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600"
+							onChange={() => handleCheckboxToggle(todoIdx)}
 						/>
 						<label
-							htmlFor={`${todo.title}-${idx}`}
-							className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+							htmlFor={`${todo.title}-${todoIdx}`}
+							className={`ml-2 text-sm font-medium text-gray-900 dark:text-gray-300 ${
+								todo.isCompleted ? "line-through" : ""
+							}`}
 						>
 							{todo.title}
 						</label>

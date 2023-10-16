@@ -1,0 +1,14 @@
+{
+	"todoList": [
+		{ "title": "Buy groceries", "isCompleted": false },
+		{ "title": "Pay bills", "isCompleted": false },
+		{ "title": "Clean the house", "isCompleted": false },
+		{ "title": "Go for a run", "isCompleted": false },
+		{ "title": "Read a book", "isCompleted": false },
+		{ "title": "Call a friend", "isCompleted": false },
+		{ "title": "Write a report", "isCompleted": false },
+		{ "title": "Learn a new language", "isCompleted": false },
+		{ "title": "Organize the closet", "isCompleted": false },
+		{ "title": "Plan a vacation", "isCompleted": false }
+	]
+}
