@@ -1,14 +1,22 @@
 {
 	"todoList": [
-		{ "title": "Buy groceries", "isCompleted": false },
-		{ "title": "Pay bills", "isCompleted": false },
-		{ "title": "Clean the house", "isCompleted": false },
-		{ "title": "Go for a run", "isCompleted": false },
-		{ "title": "Read a book", "isCompleted": false },
-		{ "title": "Call a friend", "isCompleted": false },
-		{ "title": "Write a report", "isCompleted": false },
-		{ "title": "Learn a new language", "isCompleted": false },
-		{ "title": "Organize the closet", "isCompleted": false },
-		{ "title": "Plan a vacation", "isCompleted": false }
+		{ "title": "Buy groceries", "isCompleted": false, "isEditing": false },
+		{ "title": "Pay bills", "isCompleted": false, "isEditing": false },
+		{ "title": "Clean the house", "isCompleted": false, "isEditing": false },
+		{ "title": "Go for a run", "isCompleted": false, "isEditing": false },
+		{ "title": "Read a book", "isCompleted": false, "isEditing": false },
+		{ "title": "Call a friend", "isCompleted": false, "isEditing": false },
+		{ "title": "Write a report", "isCompleted": false, "isEditing": false },
+		{
+			"title": "Learn a new language",
+			"isCompleted": false,
+			"isEditing": false
+		},
+		{
+			"title": "Organize the closet",
+			"isCompleted": false,
+			"isEditing": false
+		},
+		{ "title": "Plan a vacation", "isCompleted": false, "isEditing": false }
 	]
 }
