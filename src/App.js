@@ -57,6 +57,17 @@ const App = () => {
 	const handleKeyDown = (todoIdx, e) => {
 		if (e.key === "Escape") {
 			handleFocusOut(todoIdx);
+		} else if (e.key === "Enter") {
+			const editedTodo = e.target.value;
+			if (editedTodo.trim().length > 0) {
+				setTodos(
+					todos.map((todo, idx) =>
+						idx === todoIdx
+							? { ...todo, title: e.target.value, isEditing: false }
+							: todo
+					)
+				);
+			}
 		}
 	};
 	return (
@@ -110,6 +121,7 @@ const TodoList = forwardRef((props, ref) => {
 										id={`${todo.title}-${todoIdx}`}
 										type="checkbox"
 										className="todo-check-box"
+										checked={todo.isCompleted ? "checked" : ""}
 										onChange={() => handleCheckboxToggle(todoIdx)}
 									/>
 									<label
