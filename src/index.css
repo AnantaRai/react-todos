@@ -33,4 +33,16 @@
 	.todo-edit-input {
 		@apply font-medium text-gray-900 text-sm rounded-lg focus:ring-blue-500 w-full mx-auto p-2.5 dark:bg-gray-700  dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500  focus:outline-none;
 	}
+
+	.todo-filter-tab-container {
+		@apply flex justify-center items-center my-4;
+	}
+
+	.todo-filter-active {
+		@apply inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-500  ring-1 ring-inset ring-green-500 mr-4 hover:cursor-pointer;
+	}
+
+	.todo-filter-normal {
+		@apply inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-gray-600  ring-1 ring-inset ring-gray-500/10 mr-4 hover:cursor-pointer;
+	}
 }
