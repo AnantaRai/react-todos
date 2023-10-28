@@ -1,18 +1,17 @@
-import React, { forwardRef, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import './index.css';
 
 import TodoInputField from './components/TodoInputField';
+import TodoEditField from './components/TodoEditField';
 import FilterOption from './components/FilterOption';
+import EditButton from './components/EditButton';
+import DeleteButton from './components/DeleteButton';
 
 import Todos from './todos.json';
 import { config } from './config';
 import { Filters, KeyCodes } from './constants';
-import EditButton from './components/EditButton';
-import DeleteButton from './components/DeleteButton';
 
 function App() {
-	const editTodoRef = useRef(null);
-
 	const [todos, setTodos] = useState(
 		config.useJsonFileForTodos ? Todos.todoList : []
 	);
@@ -43,58 +42,55 @@ function App() {
 		}
 	}
 
-	const handleCheckboxToggle = (todoIdx) => {
-		if (todos[todoIdx] !== 'undefined') {
+	function handleCheckboxToggle(todoIdx) {
+		setTodos(
+			todos.map((todo, idx) =>
+				idx === todoIdx ? { ...todo, isCompleted: !todo.isCompleted } : todo
+			)
+		);
+	}
+
+	function handleEdit(todoIdx) {
+		setTodos(
+			todos.map((todo, idx) =>
+				idx === todoIdx ? { ...todo, isEditing: true } : todo
+			)
+		);
+	}
+
+	function handleDelete(todoIdx) {
+		setTodos(todos.filter((_, idx) => idx !== todoIdx));
+	}
+
+	function handleEditFieldFocusOut(todoIdx) {
+		setTodos(
+			todos.map((todo, idx) =>
+				idx === todoIdx ? { ...todo, isEditing: false } : todo
+			)
+		);
+	}
+
+	function handleUpdate(editedTodo, todoIdx) {
+		const trimedEditedTodo = editedTodo.trim();
+		if (trimedEditedTodo.length > 0) {
 			setTodos(
 				todos.map((todo, idx) =>
-					idx === todoIdx ? { ...todo, isCompleted: !todo.isCompleted } : todo
+					idx === todoIdx
+						? { ...todo, title: trimedEditedTodo, isEditing: false }
+						: todo
 				)
 			);
 		}
-	};
+	}
 
-	const handleEdit = (todoIdx) => {
-		if (todos[todoIdx] !== 'undefined') {
-			setTodos(
-				todos.map((todo, idx) =>
-					idx === todoIdx ? { ...todo, isEditing: true } : todo
-				)
-			);
+	function handleKeyDown(todoIdx, e) {
+		switch (e.key) {
+			case KeyCodes.Escape:
+				handleEditFieldFocusOut(todoIdx);
+			case KeyCodes.Enter:
+				handleUpdate(e.target.value, todoIdx);
 		}
-	};
-
-	const handleDelete = (todoIdx) => {
-		if (todos[todoIdx] !== 'undefined') {
-			setTodos(todos.filter((_, idx) => idx !== todoIdx));
-		}
-	};
-
-	const handleFocusOut = (todoIdx) => {
-		if (todos[todoIdx] !== 'undefined') {
-			setTodos(
-				todos.map((todo, idx) =>
-					idx === todoIdx ? { ...todo, isEditing: false } : todo
-				)
-			);
-		}
-	};
-
-	const handleKeyDown = (todoIdx, e) => {
-		if (e.key === 'Escape') {
-			handleFocusOut(todoIdx);
-		} else if (e.key === 'Enter') {
-			const editedTodo = e.target.value;
-			if (editedTodo.trim().length > 0) {
-				setTodos(
-					todos.map((todo, idx) =>
-						idx === todoIdx
-							? { ...todo, title: e.target.value, isEditing: false }
-							: todo
-					)
-				);
-			}
-		}
-	};
+	}
 
 	return (
 		<div className="container">
@@ -120,9 +116,8 @@ function App() {
 
 			<TodoList
 				handleCheckboxToggle={handleCheckboxToggle}
-				ref={editTodoRef}
 				handleEdit={handleEdit}
-				handleFocusOut={handleFocusOut}
+				handleEditFieldFocusOut={handleEditFieldFocusOut}
 				handleKeyDown={handleKeyDown}
 				handleDelete={handleDelete}
 				filteredTodos={filteredTodos}
@@ -131,11 +126,11 @@ function App() {
 	);
 }
 
-const TodoList = forwardRef((props, ref) => {
+function TodoList(props) {
 	const {
 		handleCheckboxToggle,
 		handleEdit,
-		handleFocusOut,
+		handleEditFieldFocusOut,
 		handleKeyDown,
 		handleDelete,
 		filteredTodos,
@@ -170,24 +165,19 @@ const TodoList = forwardRef((props, ref) => {
 								</div>
 							</div>
 						)}
-
-						{todo.isEditing && (
-							<input
-								type="text"
-								name="task"
-								ref={ref}
-								className="todo-edit-input"
-								defaultValue={todo.title}
-								onBlur={() => handleFocusOut(todoIdx)}
-								autoFocus
-								onKeyDown={(e) => handleKeyDown(todoIdx, e)}
+						{todo.isEditing ? (
+							<TodoEditField
+								todo={todo}
+								todoIdx={todoIdx}
+								handleEditFieldFocusOut={handleEditFieldFocusOut}
+								handleKeyDown={handleKeyDown}
 							/>
-						)}
+						) : null}
 					</li>
 				);
 			})}
 		</ol>
 	);
-});
+}
 
 export default App;
